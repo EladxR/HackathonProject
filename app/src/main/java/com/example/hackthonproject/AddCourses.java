@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,6 +40,7 @@ public class AddCourses extends AppCompatActivity {
     public void onAddCourse(View v){
         String course= String.valueOf(courseText.getText());
         rootRef.child("Users").child(user.getUid()).child("course").setValue(course);
+        Toast.makeText(AddCourses.this, course,Toast.LENGTH_LONG).show();
 
 
     }
