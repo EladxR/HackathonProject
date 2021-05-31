@@ -11,7 +11,9 @@
         android:theme="@style/Theme.HackthonProject">
         <activity android:name=".AddCourses"></activity>
         <activity android:name=".SignupActivity" />
-        <activity android:name=".WelcomeActivity" />
+        <activity
+            android:name=".WelcomeActivity"
+            android:theme="@style/Theme.Intro"/>
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".MainActivity"
