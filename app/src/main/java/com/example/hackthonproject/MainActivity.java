@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public static String username; // changes on data change
     public static String profileImage=null;
     private FirebaseAuth mAuth;
-//kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+//iiiii
     private ProgressDialog loadingBar;
     private boolean welcomeOnlyOnce=false;
 
