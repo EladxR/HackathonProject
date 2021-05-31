@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressDialog loadingBar;
     private boolean welcomeOnlyOnce=false;
-    // gal's test
+    // gal's test 20:45
+    private boolean gal= true;
     private ActivityMainBinding binding;
 
     @Override
