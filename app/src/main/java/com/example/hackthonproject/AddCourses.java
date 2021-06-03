@@ -2,6 +2,7 @@ package com.example.hackthonproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -33,17 +34,22 @@ public class AddCourses extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_courses);
-        listViewCourses=findViewById(R.id.ListViewCourses);
-        chosenCourses=new ArrayList<>();
-        lvAdapter=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,chosenCourses);
+        listViewCourses = findViewById(R.id.ListViewCourses);
+        chosenCourses = new ArrayList<>();
+        lvAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, chosenCourses);
         listViewCourses.setAdapter(lvAdapter);
 
         MaterialSpinner spinner = (MaterialSpinner) findViewById(R.id.spinnerChooseCourse);
-        spinner.setItems("Calculus", "Linear algebra ", "Algorithms","1","2","3","4","5","6","7");
-        course="Calculus"; //first course
+        spinner.setItems("Calculus 1", "Linear Algebra 1", "Calculus 2", "Linear Algebra 2", "Algorithms",
+                "Data Structures",
+                "Discrete mathematics",
+                "Software 1",
+                "Statistics");
+        course = "Calculus"; //first course
         spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                course =item;
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                course = item;
 
             }
         });
@@ -54,17 +60,17 @@ public class AddCourses extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth= FirebaseAuth.getInstance();
-        user=mAuth.getCurrentUser();
-        rootRef= FirebaseDatabase.getInstance("https://hackthonproject-1d1d6-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        rootRef = FirebaseDatabase.getInstance("https://hackthonproject-1d1d6-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
 
 
     }
 
-    public void onAddCourse(View v){ // added selected course
-        if(chosenCourses.contains(course)){
-            Toast.makeText(AddCourses.this,"course already chosen",Toast.LENGTH_SHORT).show();
-        }else {
+    public void onAddCourse(View v) { // added selected course
+        if (chosenCourses.contains(course)) {
+            Toast.makeText(AddCourses.this, "course already chosen", Toast.LENGTH_SHORT).show();
+        } else {
             chosenCourses.add(course);
             lvAdapter.notifyDataSetChanged();
         }
@@ -81,7 +87,13 @@ public class AddCourses extends AppCompatActivity {
     public void onFinish(View view) {
         //TODO finish activity to MAIN
         rootRef.child("Users").child(user.getUid()).child("courses").setValue(chosenCourses);
-        rootRef.child("Users").child(user.getUid()).child("courses").setValue(chosenCourses);
+        rootRef.child("Users").child(user.getUid()).child("firstTime").setValue("no");
+        toMainActivity();
 
+    }
+
+    private void toMainActivity() {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 }
