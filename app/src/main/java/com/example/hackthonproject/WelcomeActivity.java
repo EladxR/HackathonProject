@@ -26,16 +26,6 @@ public class WelcomeActivity extends IntroActivity {
 
 
 
-        Log.d("Debug","gggggggggggggggggggggggg");
-        addSlide(new FragmentSlide.Builder()
-                .background(R.color.teal_200)
-                .backgroundDark(R.color.teal_700)
-                .fragment(R.layout.fragment_first, R.style.Theme_Design_Light)
-                .build());
-        getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content, new Add_Courses().commit());
-
-        Log.d("Debug","hhhhhhhhhhhhhhhhhhhhhhhhh");
     }
 
 

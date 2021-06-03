@@ -12,8 +12,7 @@
         <activity android:name=".AddCourses"></activity>
         <activity android:name=".SignupActivity" />
         <activity
-            android:name=".WelcomeActivity"
-            android:theme="@style/Theme.Intro"/>
+            android:name=".WelcomeActivity" />
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".MainActivity"
