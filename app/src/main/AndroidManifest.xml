@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/Theme.HackthonProject">
-        <activity android:name=".NewRequest"></activity>
+        <activity android:name=".SplashScreen"></activity>
+        <activity android:name=".NewRequest" />
         <activity android:name=".AddCourses" />
         <activity android:name=".SignupActivity" />
         <activity android:name=".WelcomeActivity" />
