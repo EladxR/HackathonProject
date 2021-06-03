@@ -6,16 +6,18 @@ public class Request {
 
     private String title;
     private String course;
-    private Date date;
+    private String date;
     private String time;
     private String description;
+    private String username;
 
-    public Request(String title, String course, Date date, String time, String description) {
+    public Request(String title, String course, String date, String time, String description,String username) {
         this.title = title;
         this.course = course;
         this.date = date;
         this.time = time;
         this.description = description;
+        this.username=username;
     }
 
     public String getTitle() {
@@ -26,7 +28,7 @@ public class Request {
         return course;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -46,7 +48,7 @@ public class Request {
         this.course = course;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -56,6 +58,14 @@ public class Request {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
 

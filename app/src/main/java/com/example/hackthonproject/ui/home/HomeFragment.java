@@ -1,12 +1,16 @@
 package com.example.hackthonproject.ui.home;
 
+import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,6 +23,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hackthonproject.MainActivity;
+import com.example.hackthonproject.NewRequest;
 import com.example.hackthonproject.R;
 import com.example.hackthonproject.databinding.FragmentHomeBinding;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +48,7 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-//        homeViewModel =
+/*        homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -54,22 +60,22 @@ public class HomeFragment extends Fragment {
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
-        });
+        });*/
 
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        recyclerView= view.findViewById(R.id.userlist);
+        recyclerView = view.findViewById(R.id.userlist);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        database=database= FirebaseDatabase.getInstance("https://hackthonproject-1d1d6-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
+        database = database = FirebaseDatabase.getInstance("https://hackthonproject-1d1d6-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
         list = new ArrayList<>();
-        myAdapter=new MyAdapter(this.getContext(),list);
+        myAdapter = new MyAdapter(this.getContext(), list);
         recyclerView.setAdapter(myAdapter);
 
         database.child("Requests").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                 }
             }
@@ -80,10 +86,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        ImageButton btnNewRequest = view.findViewById(R.id.btnAddNewRequest);
+        btnNewRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent((Activity)getActivity(), NewRequest.class));
+            }
+        });
 
 
-
-        return root;
+        return view;
     }
 
     @Override
