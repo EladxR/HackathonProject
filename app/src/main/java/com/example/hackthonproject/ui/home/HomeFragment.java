@@ -26,24 +26,34 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hackthonproject.MainActivity;
 import com.example.hackthonproject.NewRequest;
 import com.example.hackthonproject.R;
-import com.example.hackthonproject.databinding.FragmentHomeBinding;
+//import com.example.hackthonproject.databinding.FragmentHomeBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jaredrummler.materialspinner.MaterialSpinner;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    private FragmentHomeBinding binding;
+    //private FragmentHomeBinding binding;
     ListView listView;
     ArrayList<String> list;
     RecyclerView recyclerView;
     MyAdapter myAdapter;
     DatabaseReference database;
+    FirebaseUser user;
+    FirebaseAuth mAuth;
+    MaterialSpinner spinner;
+
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -64,6 +74,7 @@ public class HomeFragment extends Fragment {
 
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        spinner=view.findViewById(R.id.HomeSpinnerChooseCourse);
         recyclerView = view.findViewById(R.id.userlist);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -90,7 +101,9 @@ public class HomeFragment extends Fragment {
         btnNewRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent((Activity)getActivity(), NewRequest.class));
+                Intent toNewRequest=new Intent((Activity)getActivity(), NewRequest.class);
+                toNewRequest.putExtra("username",MainActivity.username);
+                startActivity(toNewRequest);
             }
         });
 
@@ -99,9 +112,34 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mAuth= FirebaseAuth.getInstance();
+        user=mAuth.getCurrentUser();
+
+        DatabaseReference rootRef= FirebaseDatabase.getInstance("https://hackthonproject-1d1d6-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
+        rootRef.child("Users").child(user.getUid()).child("courses").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                List<String> courses=new ArrayList<>();
+                courses.add("Choose Course");
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    courses.add(dataSnapshot.getValue().toString());
+                }
+                spinner.setItems(courses);
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        //binding = null;
     }
 
 

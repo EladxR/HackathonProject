@@ -10,14 +10,16 @@ public class Request {
     private String time;
     private String description;
     private String username;
+    private String userID;
 
-    public Request(String title, String course, String date, String time, String description,String username) {
+    public Request(String title, String course, String date, String time, String description,String username,String userID) {
         this.title = title;
         this.course = course;
         this.date = date;
         this.time = time;
         this.description = description;
         this.username=username;
+        this.userID=userID;
     }
 
     public String getTitle() {
@@ -67,6 +69,15 @@ public class Request {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
 }
 
 
