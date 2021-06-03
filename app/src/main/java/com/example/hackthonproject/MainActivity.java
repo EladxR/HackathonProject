@@ -79,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
         }else{
             //first get data
 
-            FirebaseDatabase.getInstance("https://hackthonproject-1d1d6-default-rtdb.europe-west1.firebasedatabase.app/").getReference().child("Users").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            DatabaseReference database= FirebaseDatabase.getInstance("https://hackthonproject-1d1d6-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
+            database.child("Users").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     username= String.valueOf(dataSnapshot.child("username").getValue());
