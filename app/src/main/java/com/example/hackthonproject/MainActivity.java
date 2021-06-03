@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SendToWelcomeActivity() {
-        Intent intent=new Intent(this,AddCourses.class);
+        Intent intent=new Intent(this,WelcomeActivity.class);
         startActivity(intent);
     }
 
