@@ -15,8 +15,10 @@ import android.os.Bundle;
 import android.widget.EditText;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -49,6 +51,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private ImageView realProfileImage;
     private StorageReference profileImageRef;
     private String userId;
+    public String imageUrl;
     public Uri imageUri;
     private FirebaseStorage storage;
     private StorageReference storagereference;
@@ -126,26 +129,24 @@ public class WelcomeActivity extends AppCompatActivity {
         StorageReference mountainsRef = storagereference.child("images/" + randomKey);
 
         mountainsRef.putFile(imageUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    public void onComplete(@NonNull @NotNull Task<UploadTask.TaskSnapshot> task) {
                         pd.dismiss();
                         Snackbar.make(findViewById(android.R.id.content), "Image Uploaded", Snackbar.LENGTH_LONG).show();
+                        task.getResult().getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                imageUrl = task.getResult().toString();
+                                DatabaseReference userRoot = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+                                userRoot.child("profileImage").setValue(imageUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
 
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull @org.jetbrains.annotations.NotNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull @NotNull UploadTask.TaskSnapshot snapshot) {
-                        double progressPrecent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                        pd.setMessage("Percentages: " + (int) progressPrecent + "%");
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
     }
@@ -153,7 +154,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private void updatePhoneNumber() {
         DatabaseReference rootRef = FirebaseDatabase.getInstance("https://hackthonproject-1d1d6-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
         rootRef.child("Users").child(userId).child("phoneNumber").setValue(phoneNumber);
-        rootRef.child("Users").child(userId).child("profileImage").setValue(imageUri.toString());
+        rootRef.child("Users").child(userId).child("profileImage").setValue(imageUrl);
 
     }
 }

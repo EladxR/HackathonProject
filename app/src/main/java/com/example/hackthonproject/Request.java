@@ -11,8 +11,9 @@ public class Request {
     private String description;
     private String username;
     private String userID;
+    private String location;
 
-    public Request(String title, String course, String date, String time, String description,String username,String userID) {
+    public Request(String title, String course, String date, String time, String description,String username,String userID,String location) {
         this.title = title;
         this.course = course;
         this.date = date;
@@ -20,6 +21,10 @@ public class Request {
         this.description = description;
         this.username=username;
         this.userID=userID;
+        this.location=location;
+    }
+    public Request(){
+
     }
 
     public String getTitle() {
@@ -78,6 +83,13 @@ public class Request {
         this.userID = userID;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 }
 
 

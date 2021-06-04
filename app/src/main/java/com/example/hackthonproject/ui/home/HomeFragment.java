@@ -27,8 +27,10 @@ import com.example.hackthonproject.MainActivity;
 import com.example.hackthonproject.NewRequest;
 import com.example.hackthonproject.R;
 //import com.example.hackthonproject.databinding.FragmentHomeBinding;
+import com.example.hackthonproject.Request;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,13 +48,14 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     //private FragmentHomeBinding binding;
     ListView listView;
-    ArrayList<String> list;
+    ArrayList<Request> list;
     RecyclerView recyclerView;
     MyAdapter myAdapter;
     DatabaseReference database;
     FirebaseUser user;
     FirebaseAuth mAuth;
     MaterialSpinner spinner;
+    String currCourse;
 
 
 
@@ -75,27 +78,26 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         spinner=view.findViewById(R.id.HomeSpinnerChooseCourse);
+        currCourse="Choose Course";
         recyclerView = view.findViewById(R.id.userlist);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        database = database = FirebaseDatabase.getInstance("https://hackthonproject-1d1d6-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
+        database  = FirebaseDatabase.getInstance("https://hackthonproject-1d1d6-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
         list = new ArrayList<>();
         myAdapter = new MyAdapter(this.getContext(), list);
         recyclerView.setAdapter(myAdapter);
 
-        database.child("Requests").addValueEventListener(new ValueEventListener() {
+        /*database.child("Requests").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
 
         ImageButton btnNewRequest = view.findViewById(R.id.btnAddNewRequest);
         btnNewRequest.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +118,9 @@ public class HomeFragment extends Fragment {
         super.onStart();
         mAuth= FirebaseAuth.getInstance();
         user=mAuth.getCurrentUser();
+        if(user==null){
+            return;
+        }
 
         DatabaseReference rootRef= FirebaseDatabase.getInstance("https://hackthonproject-1d1d6-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
         rootRef.child("Users").child(user.getUid()).child("courses").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -134,6 +139,47 @@ public class HomeFragment extends Fragment {
 
             }
         });
+        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                CleanRecyclerView();
+                currCourse=item;
+                database.child("Requests").child(currCourse).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+                        Request myRequest=(Request) snapshot.getValue(Request.class);
+                        list.add(myRequest);
+                        myAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+        });
+    }
+
+    private void CleanRecyclerView() {
+        list.clear();
+        myAdapter.notifyDataSetChanged();
     }
 
     @Override
